@@ -1,6 +1,7 @@
-import { IsArray, IsDate, IsDateString, IsNotEmpty, IsNumber, IsNumberString, IsString, IsUrl } from "class-validator";
+import { IsArray, IsDateString, IsNotEmpty, IsNumberString, IsString, IsUrl } from "class-validator";
 
 export class CreatePersonDto {
+  
   @IsNotEmpty()
   @IsString()
   readonly name: string;
