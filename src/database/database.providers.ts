@@ -13,7 +13,7 @@ export const databaseProviders = [
         password: 'rootmysql',
         database: 'mydb2',
         entities: [
-            __dirname + '/../people/entities/*.entity{.ts,.js}',
+            __dirname + '/../**/**/*.entity{.ts,.js}',
         ],
         synchronize: true,
       });
