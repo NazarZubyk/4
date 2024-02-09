@@ -8,8 +8,6 @@ import { peopleProviders } from 'src/people/people.providers';
 @Module({
   imports: [DatabaseModule],
   controllers: [ImagesController],
-  providers: [ImagesService,
-    ...imageProviders,
-  ...peopleProviders],
+  providers: [ImagesService, ...imageProviders, ...peopleProviders],
 })
 export class ImagesModule {}

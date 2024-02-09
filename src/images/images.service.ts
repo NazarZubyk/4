@@ -5,10 +5,10 @@ import { Image } from './entities/image.entity';
 import { Repository } from 'typeorm';
 import { Person } from 'src/people/entities/person.entity';
 import { unlink } from 'fs';
+import { port } from 'src/main';
 
 @Injectable()
 export class ImagesService {
-
   constructor(
     @Inject('IMAGE_REPOSITORY')
     private imagesRepository: Repository<Image>,
@@ -16,23 +16,27 @@ export class ImagesService {
     private peopleRepository: Repository<Person>,
   ) {}
 
-  async create(file: Express.Multer.File, createImageDto: CreateImageDto) {
-    console.log(file)
+  async create(file: Express.Multer.File, name: string) {
+    console.log(file);
     const person = await this.peopleRepository.findOneBy({
-      name: createImageDto.personeName
-    })
+      name: name,
+    });
 
     if (!person) {
-      unlink(file.path,()=>{})
+      unlink(file.path, () => {});
       throw new NotFoundException('Person not found');
     }
 
     await this.imagesRepository.save({
-      
       path: file.path,
-      personID: person.id
+      personID: person.id,
+      url: ''
+    });
 
-    })
+    const image = await this.imagesRepository.findOneBy({ path: file.path });
+    image.url = `http://localhost:${port}/images/${image.id}`;
+    await this.imagesRepository.save(image);
+
     return 'This action adds a new image';
   }
 
@@ -41,14 +45,28 @@ export class ImagesService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} image`;
+    return this.imagesRepository.findOneBy({ id: id });
   }
 
-  update(id: number, updateImageDto: UpdateImageDto) {
+  async update(id: number, updateImageDto: UpdateImageDto) {
+    const imageToUpdate = await this.imagesRepository.findOneBy({
+      id: id,
+    });
+
+    if (!imageToUpdate) {
+      return `Person with id #${id} not found`;
+    }
+
+    Object.assign(imageToUpdate, updateImageDto);
+
+    await this.imagesRepository.save(imageToUpdate);
+
     return `This action updates a #${id} image`;
   }
 
-  remove(id: number) {
+  async remove(id: number) {
+    const img = await this.imagesRepository.findOneBy({ id: id });
+    this.imagesRepository.remove(img);
     return `This action removes a #${id} image`;
   }
 }

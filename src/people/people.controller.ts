@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
 import { PeopleService } from './people.service';
@@ -9,13 +18,13 @@ export class PeopleController {
 
   @Post()
   create(@Body() createPersonDto: CreatePersonDto) {
-    console.log("created")
+    console.log('created');
     return this.peopleService.create(createPersonDto);
   }
 
   @Get()
   findAll() {
-    console.log('findAll')
+    console.log('findAll');
     return this.peopleService.findAll();
   }
 
@@ -26,16 +35,17 @@ export class PeopleController {
 
   @Get(':page/:size')
   entitiesWithPagination(
-    @Param('page') page?:number  ,
-    @Param('size') size?:number 
-  ){
-    return this.peopleService.entitiesWithPagination(page,size);
+    @Param('page') page?: number,
+    @Param('size') size?: number,
+  ) {
+    return this.peopleService.entitiesWithPagination(page, size);
   }
 
-  
-
   @Patch(':name')
-  update(@Param('name') name: string, @Body() updatePersonDto: UpdatePersonDto) {
+  update(
+    @Param('name') name: string,
+    @Body() updatePersonDto: UpdatePersonDto,
+  ) {
     return this.peopleService.update(name, updatePersonDto);
   }
 
