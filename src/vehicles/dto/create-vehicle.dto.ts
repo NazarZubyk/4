@@ -1,70 +1,83 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString, IsArray, IsUrl } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { Film } from 'src/films/entities/film.entity';
+import { Person } from 'src/people/entities/person.entity';
 
 export class CreateVehicleDto {
-  @ApiProperty()
+  @IsNotEmpty()
   @IsNumber()
+  @ApiProperty()
   readonly cargo_capacity: number;
 
-  @ApiProperty()
+  @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   readonly consumables: string;
 
-  @ApiProperty()
+  @IsNotEmpty()
   @IsNumber()
+  @ApiProperty()
   readonly cost_in_credits: number;
 
-  @ApiProperty()
+  @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   readonly created: string;
 
-  @ApiProperty()
+  @IsNotEmpty()
   @IsNumber()
+  @ApiProperty()
   readonly crew: number;
 
-  @ApiProperty()
+  @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   readonly edited: string;
 
-  @ApiProperty()
+  @IsNotEmpty()
   @IsNumber()
+  @ApiProperty()
   readonly length: number;
 
-  @ApiProperty()
+  @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   readonly manufacturer: string;
 
-  @ApiProperty()
+  @IsNotEmpty()
   @IsNumber()
+  @ApiProperty()
   readonly max_atmosphering_speed: number;
 
-  @ApiProperty()
+  @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   readonly model: string;
 
-  //@ApiProperty()
+  @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   readonly name: string;
 
-  @ApiProperty()
+  @IsNotEmpty()
   @IsNumber()
+  @ApiProperty()
   readonly passengers: number;
 
-  @ApiProperty()
+  @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   readonly vehicle_class: string;
 
-  @ApiProperty()
+  @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   readonly url: string;
 
-  @ApiProperty()
-  @IsArray()
-  @IsUrl({}, { each: true })
-  readonly pilots: string[];
+  @ApiProperty({ type: () => Person, isArray: true })
+  readonly pilots: Person[];
 
-  @ApiProperty()
-  @IsArray()
-  @IsUrl({}, { each: true })
-  readonly films: string[];
+  @ApiProperty({ type: () => Film, isArray: true })
+  readonly films: Film[];
 }
+

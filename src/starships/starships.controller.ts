@@ -10,7 +10,9 @@ import {
 import { StarshipsService } from './starships.service';
 import { CreateStarshipDto } from './dto/create-starship.dto';
 import { UpdateStarshipDto } from './dto/update-starship.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Starships')
 @Controller('starships')
 export class StarshipsController {
   constructor(private readonly starshipsService: StarshipsService) {}
@@ -25,9 +27,9 @@ export class StarshipsController {
     return this.starshipsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.starshipsService.findOne(+id);
+  @Get(':name')
+  findOne(@Param('name') name: string) {
+    return this.starshipsService.findOne(name);
   }
 
   @Patch(':id')

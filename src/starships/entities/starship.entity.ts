@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Film } from 'src/films/entities/film.entity';
+import { Person } from 'src/people/entities/person.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Starship {
@@ -35,9 +37,12 @@ export class Starship {
   passengers: number;
   @Column()
   starship_class: string;
-
+  @Column()
   url: string;
 
-  films: string[];
-  pilots: string[];
+  @ManyToOne(()=>Film,(film)=>film.starships)
+  films: Film[];
+
+  @ManyToOne(() => Person, (person) => person.starships)
+  pilots: Person[];
 }

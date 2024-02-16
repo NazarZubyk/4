@@ -10,7 +10,9 @@ import {
 import { SpeciesService } from './species.service';
 import { CreateSpeciesDto } from './dto/create-species.dto';
 import { UpdateSpeciesDto } from './dto/update-species.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Species')
 @Controller('species')
 export class SpeciesController {
   constructor(private readonly speciesService: SpeciesService) {}

@@ -1,62 +1,76 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNumber, IsArray, IsUrl } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { Film } from 'src/films/entities/film.entity';
+import { Person } from 'src/people/entities/person.entity';
+import { Planet } from 'src/planets/entities/planet.entity';
 
 export class CreateSpeciesDto {
-  @ApiProperty()
+  @IsNotEmpty()
   @IsNumber()
+  @ApiProperty()
   readonly average_height: number;
 
-  @ApiProperty()
+  @IsNotEmpty()
   @IsNumber()
+  @ApiProperty()
   readonly average_lifespan: number;
 
-  @ApiProperty()
+  @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   readonly classification: string;
 
-  @ApiProperty()
+  @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   readonly created: string;
 
-  @ApiProperty()
+  @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   readonly designation: string;
 
-  @ApiProperty()
+  @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   readonly edited: string;
 
-  @ApiProperty()
+  @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   readonly eye_colors: string;
 
-  @ApiProperty()
+  @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   readonly hair_colors: string;
 
-  @ApiProperty()
+  @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   readonly language: string;
 
-  //@ApiProperty()
+  @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   readonly name: string;
 
-  @ApiProperty()
+  @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   readonly skin_colors: string;
 
-  @ApiProperty()
+  @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   readonly url: string;
 
-  @ApiProperty()
-  @IsArray()
-  @IsUrl({}, { each: true })
-  readonly films: string[];
+  @ApiProperty({ type: () => Planet, isArray: true })
+  readonly homeworld: Planet[];
 
-  @ApiProperty()
-  @IsArray()
-  @IsString({ each: true })
-  readonly people: string[];
+  @ApiProperty({ type: () => Person, isArray: true })
+  readonly people: Person[];
+
+  @ApiProperty({ type: () => Film, isArray: true })
+  readonly films: Film[];
 }

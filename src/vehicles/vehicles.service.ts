@@ -1,26 +1,46 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
+import { Repository } from 'typeorm';
+import { Vehicle } from './entities/vehicle.entity';
 
 @Injectable()
 export class VehiclesService {
-  create(createVehicleDto: CreateVehicleDto) {
+
+constructor(
+  @Inject('VEHICLE_REPOSITORY')
+  private vehicleRepository: Repository<Vehicle>,
+){}
+
+  async create(createVehicleDto: CreateVehicleDto) {
+    await this.vehicleRepository.save(createVehicleDto);
     return 'This action adds a new vehicle';
   }
 
-  findAll() {
-    return `This action returns all vehicles`;
+  async findAll() {
+    return await this.vehicleRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} vehicle`;
+  async findOne(name: string) {
+    return await this.vehicleRepository.findOneBy({name:name});
   }
 
-  update(id: number, updateVehicleDto: UpdateVehicleDto) {
+  async update(id: number, updateVehicleDto: UpdateVehicleDto) {
+      if(updateVehicleDto===undefined){
+        throw new Error('UpdateVehicleDto is undefined');
+      }
+    const vehicle = await this.vehicleRepository.findOneBy({id:id})
+
+    await Object.assign(vehicle,updateVehicleDto);
+
+    await this.vehicleRepository.save(vehicle)
+
     return `This action updates a #${id} vehicle`;
   }
 
-  remove(id: number) {
+  async remove(id: number) {
+    const vehicle = await this.vehicleRepository.findOneBy({id:id}) 
+    await this.vehicleRepository.remove(vehicle)
     return `This action removes a #${id} vehicle`;
   }
 }

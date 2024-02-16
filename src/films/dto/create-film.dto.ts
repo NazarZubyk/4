@@ -1,69 +1,75 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNumber, IsArray, IsUrl } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsNumber, IsString, IsUrl } from 'class-validator';
+import { Planet } from 'src/planets/entities/planet.entity';
+import { Film } from 'src/films/entities/film.entity';
+import { Species } from 'src/species/entities/species.entity';
+import { Vehicle } from 'src/vehicles/entities/vehicle.entity';
+import { Starship } from 'src/starships/entities/starship.entity';
+import { Image } from 'src/images/entities/image.entity';
 
 export class CreateFilmDto {
-  @ApiProperty()
-  @IsNumber()
-  readonly id: number;
-
-  @ApiProperty()
+  @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   readonly created: string;
 
-  @ApiProperty()
+  @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   readonly director: string;
 
-  @ApiProperty()
+  @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   readonly edited: string;
 
-  @ApiProperty()
+  @IsNotEmpty()
   @IsNumber()
+  @ApiProperty()
   readonly episode_id: number;
 
-  @ApiProperty()
+  @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   readonly opening_crawl: string;
 
-  @ApiProperty()
+  @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   readonly producer: string;
 
+  @IsNotEmpty()
+  @IsDateString()
   @ApiProperty()
-  @IsString()
   readonly release_date: string;
 
-  @ApiProperty()
+  @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   readonly title: string;
 
+  @IsNotEmpty()
+  @IsUrl()
   @ApiProperty()
-  @IsString()
   readonly url: string;
 
-  @ApiProperty()
-  @IsArray()
-  @IsUrl({}, { each: true })
-  readonly vehicles: string[];
+  // Define types using the second format
+  @ApiProperty({ type: () => Planet, isArray: true })
+  readonly homeworld: Planet[];
 
-  @ApiProperty()
-  @IsArray()
-  @IsUrl({}, { each: true })
-  readonly species: string[];
+  @ApiProperty({ type: () => Film, isArray: true })
+  readonly films: Film[];
 
-  @ApiProperty()
-  @IsArray()
-  @IsUrl({}, { each: true })
-  readonly starships: string[];
+  @ApiProperty({ type: () => Species, isArray: true })
+  readonly species: Species[];
 
-  @ApiProperty()
-  @IsArray()
-  @IsUrl({}, { each: true })
-  readonly planets: string[];
+  @ApiProperty({ type: () => Vehicle, isArray: true })
+  readonly vehicles: Vehicle[];
 
-  @ApiProperty()
-  @IsArray()
-  @IsUrl({}, { each: true })
-  readonly characters: string[];
+  @ApiProperty({ type: () => Starship, isArray: true })
+  readonly starships: Starship[];
+
+  @ApiProperty({ type: () => Image, isArray: true })
+  readonly images: Image[];
 }
+

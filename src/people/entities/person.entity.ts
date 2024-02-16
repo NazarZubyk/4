@@ -1,5 +1,10 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Image } from '../../images/entities/image.entity';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Image } from 'src/images/entities/image.entity';
+import { Species } from 'src/species/entities/species.entity';
+import { Vehicle } from 'src/vehicles/entities/vehicle.entity';
+import { Starship } from 'src/starships/entities/starship.entity';
+import { Film } from 'src/films/entities/film.entity';
+import { Planet } from 'src/planets/entities/planet.entity';
 
 @Entity()
 export class Person {
@@ -36,19 +41,24 @@ export class Person {
   @Column()
   edited: string;
 
-  @Column()
-  homeworld: string;
+
   @Column()
   url: string;
 
-  @Column('simple-array')
-  films: string[];
-  @Column('simple-array')
-  species: string[];
-  @Column('simple-array')
-  vehicles: string[];
-  @Column('simple-array')
-  starships: string[];
+  @ManyToOne(() => Planet, (planet) => planet.residents)
+  homeworld: Planet[];
+
+  @ManyToOne(() => Film, (film) => film.characters)
+  films: Film[];
+
+  @OneToMany(() => Species, (species) => species.people)
+  species: Species[];
+
+  @OneToMany(() => Vehicle, (vehicle) => vehicle.pilots)
+  vehicles: Vehicle[];
+
+  @OneToMany(() => Starship, (starship) => starship.pilots)
+  starships: Starship[];
 
   @OneToMany(() => Image, (image) => image.person)
   images: Image[];

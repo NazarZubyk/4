@@ -1,62 +1,77 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsNumberString, IsString, IsUrl } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { Film } from 'src/films/entities/film.entity';
+import { Person } from 'src/people/entities/person.entity';
+import { Species } from 'src/species/entities/species.entity';
 
 export class CreatePlanetDto {
-  @ApiProperty()
+  @IsNotEmpty()
   @IsString()
-  climate: string;
-
   @ApiProperty()
+  readonly climate: string;
+
+  @IsNotEmpty()
   @IsString()
-  created: string;
-
   @ApiProperty()
-  @IsNumberString()
-  diameter: number;
+  readonly created: string;
 
+  @IsNotEmpty()
+  @IsNumber()
   @ApiProperty()
+  readonly diameter: number;
+
+  @IsNotEmpty()
   @IsString()
-  edited: string;
-
   @ApiProperty()
-  @IsNumberString()
-  gravity: number;
+  readonly edited: string;
 
+  @IsNotEmpty()
+  @IsNumber()
   @ApiProperty()
+  readonly gravity: number;
+
+  @IsNotEmpty()
   @IsString()
-  name: string;
-
   @ApiProperty()
-  @IsNumberString()
-  orbital_period: number;
+  readonly name: string;
 
+  @IsNotEmpty()
+  @IsNumber()
   @ApiProperty()
-  @IsNumberString()
-  population: number;
+  readonly orbital_period: number;
 
+  @IsNotEmpty()
+  @IsNumber()
   @ApiProperty()
-  @IsNumberString()
-  rotation_period: number;
+  readonly population: number;
 
+  @IsNotEmpty()
+  @IsNumber()
   @ApiProperty()
-  @IsNumberString()
-  surface_water: number;
+  readonly rotation_period: number;
 
+  @IsNotEmpty()
+  @IsNumber()
   @ApiProperty()
+  readonly surface_water: number;
+
+  @IsNotEmpty()
   @IsString()
-  terrain: string;
-
-  @ApiProperty({ format: 'url' })
-  @IsString()
-  @IsUrl()
-  url: string;
-
-  @ApiProperty({ type: [String], format: 'url', isArray: true })
-  @IsArray()
-  @IsUrl({}, { each: true })
-  films: string[];
-
   @ApiProperty()
-  @IsArray()
-  residents: string[];
+  readonly terrain: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  readonly url: string;
+
+  @ApiProperty({ type: () => Species, isArray: true })
+  readonly species: Species[];
+
+  @ApiProperty({ type: () => Film, isArray: true })
+  readonly films: Film[];
+
+  @ApiProperty({ type: () => Person, isArray: true })
+  readonly residents: Person[];
 }
+

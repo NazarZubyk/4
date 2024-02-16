@@ -10,7 +10,9 @@ import {
 import { VehiclesService } from './vehicles.service';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Vehicles')
 @Controller('vehicles')
 export class VehiclesController {
   constructor(private readonly vehiclesService: VehiclesService) {}
@@ -25,9 +27,9 @@ export class VehiclesController {
     return this.vehiclesService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.vehiclesService.findOne(+id);
+  @Get(':name')
+  findOne(@Param('name') name: string) {
+    return this.vehiclesService.findOne(name);
   }
 
   @Patch(':id')

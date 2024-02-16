@@ -1,9 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreatePlanetDto } from './dto/create-planet.dto';
 import { UpdatePlanetDto } from './dto/update-planet.dto';
+import { Repository } from 'typeorm';
+import { Planet } from './entities/planet.entity';
 
 @Injectable()
 export class PlanetsService {
+
+  constructor(
+    @Inject('PLANET_REPOSITORY')
+    private planetRepository: Repository<Planet>,
+  ){}
+
   create(createPlanetDto: CreatePlanetDto) {
     return 'This action adds a new planet';
   }

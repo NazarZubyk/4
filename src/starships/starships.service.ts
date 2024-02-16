@@ -1,26 +1,47 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateStarshipDto } from './dto/create-starship.dto';
 import { UpdateStarshipDto } from './dto/update-starship.dto';
+import { Repository } from 'typeorm';
+import { Starship } from './entities/starship.entity';
 
 @Injectable()
 export class StarshipsService {
-  create(createStarshipDto: CreateStarshipDto) {
+
+  constructor(
+    @Inject('STARSHIP_REPOSITORY')
+    private starshipRepository: Repository<Starship>,
+  ){}
+
+  async create(createStarshipDto: CreateStarshipDto) {
+    await this.starshipRepository.save(createStarshipDto)
     return 'This action adds a new starship';
   }
 
-  findAll() {
+  async findAll() {
+    await this.starshipRepository.find()
     return `This action returns all starships`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} starship`;
+  async findOne(name: string) {
+    return await this.starshipRepository.findOneBy({name:name});
   }
 
-  update(id: number, updateStarshipDto: UpdateStarshipDto) {
+  async update(id: number, updateStarshipDto: UpdateStarshipDto) {
+    if(!updateStarshipDto){
+      throw new Error('updateStarshipDto is not correct')
+    }
+    const starship = await this.starshipRepository.findOneBy({id:id});
+    
+    await Object.assign(starship,updateStarshipDto);
+
+    this.starshipRepository.save(starship);
+
     return `This action updates a #${id} starship`;
   }
 
-  remove(id: number) {
+  async remove(id: number) {
+    const starship = await this.starshipRepository.findOneBy({id:id});
+    await this.starshipRepository.remove(starship);
     return `This action removes a #${id} starship`;
   }
 }
