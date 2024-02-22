@@ -29,9 +29,9 @@ export class PeopleController {
     return this.peopleService.findAll();
   }
 
-  @Get(':name')
-  findOne(@Param('name') name: string) {
-    return this.peopleService.findOne(name);
+  @Get(':id')
+  findOne(@Param('id') id: number) {
+    return this.peopleService.findOne(id);
   }
 
   @Get(':page/:size')

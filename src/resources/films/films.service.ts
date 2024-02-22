@@ -1,21 +1,85 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateFilmDto } from './dto/create-film.dto';
 import { UpdateFilmDto } from './dto/update-film.dto';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Film } from './entities/film.entity';
+import { Person } from '../people/entities/person.entity';
+import { Planet } from '../planets/entities/planet.entity';
+import { Species } from '../species/entities/species.entity';
+import { Starship } from '../starships/entities/starship.entity';
+import { Vehicle } from '../vehicles/entities/vehicle.entity';
+import { generateURLforGETsByID } from 'src/utils/generatorURLs';
 
 @Injectable()
 export class FilmsService {
 
   constructor(
+    @Inject('PEOPLE_REPOSITORY')
+    private peopleRepository: Repository<Person>,
+    @Inject('PLANET_REPOSITORY')
+    private planetRepository: Repository<Planet>,
     @Inject('FILM_REPOSITORY')
     private filmRepository: Repository<Film>,
+    @Inject('SPECIES_REPOSITORY')
+    private speciesRepository: Repository<Species>,
+    @Inject('STARSHIP_REPOSITORY')
+    private starshipRepository: Repository<Starship>,
+    @Inject('VEHICLE_REPOSITORY')
+    private vehicleRepository: Repository<Vehicle>,
   ){}
 
   async create(createFilmDto: CreateFilmDto) {
-    await this.filmRepository.save(createFilmDto)
-    return 'This action adds a new film';
-  }
+    // Create a new film entity
+    const film = new Film();
+    Object.assign(film, createFilmDto);
+
+    // Fetch related entities
+    const planets = await this.planetRepository.find({
+        where: {
+            id: In(createFilmDto.planets)
+        }
+    });
+
+    const species = await this.speciesRepository.find({
+        where: {
+            id: In(createFilmDto.species)
+        }
+    });
+
+    const vehicles = await this.vehicleRepository.find({
+        where: {
+            id: In(createFilmDto.vehicles)
+        }
+    });
+
+    const starships = await this.starshipRepository.find({
+        where: {
+            id: In(createFilmDto.starships)
+        }
+    });
+
+    const characters = await this.peopleRepository.find({
+        where: {
+            id: In(createFilmDto.characters)
+        }
+    });
+
+    // Assign fetched related entities to the film entity
+    film.planets = planets;
+    film.species = species;
+    film.vehicles = vehicles;
+    film.starships = starships;
+    film.characters = characters;
+
+    // Save the film entity to the database
+    const savedFilm = await this.filmRepository.save(film);
+
+    // Generate URL for the film and save it
+    savedFilm.url = await generateURLforGETsByID('films', savedFilm.id);
+    await this.filmRepository.save(savedFilm);
+
+    return savedFilm;
+}
 
   async findAll() {
     return await this.filmRepository.find();

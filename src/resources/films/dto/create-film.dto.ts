@@ -6,22 +6,16 @@ import { Vehicle } from 'src/resources/vehicles/entities/vehicle.entity';
 import { Starship } from 'src/resources/starships/entities/starship.entity';
 import { Image } from 'src/resources/images/entities/image.entity';
 import { Film } from '../entities/film.entity';
+import { Person } from 'src/resources/people/entities/person.entity';
 
 export class CreateFilmDto {
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
-  readonly created: string;
 
   @IsNotEmpty()
   @IsString()
   @ApiProperty()
   readonly director: string;
 
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
-  readonly edited: string;
+
 
   @IsNotEmpty()
   @IsNumber()
@@ -48,17 +42,13 @@ export class CreateFilmDto {
   @ApiProperty()
   readonly title: string;
 
-  @IsNotEmpty()
-  @IsUrl()
-  @ApiProperty()
-  readonly url: string;
 
-  // Define types using the second format
+
+  @ApiProperty({ type: () => Person, isArray: true })
+  readonly characters: Person[]
+
   @ApiProperty({ type: () => Planet, isArray: true })
-  readonly homeworld: Planet[];
-
-  @ApiProperty({ type: () => Film, isArray: true })
-  readonly films: Film[];
+  readonly planets: Planet[];
 
   @ApiProperty({ type: () => Species, isArray: true })
   readonly species: Species[];
@@ -69,7 +59,6 @@ export class CreateFilmDto {
   @ApiProperty({ type: () => Starship, isArray: true })
   readonly starships: Starship[];
 
-  @ApiProperty({ type: () => Image, isArray: true })
-  readonly images: Image[];
+
 }
 

@@ -1,7 +1,7 @@
 import { Film } from 'src/resources/films/entities/film.entity';
 import { Person } from 'src/resources/people/entities/person.entity';
 import { Species } from 'src/resources/species/entities/species.entity';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class Planet {
@@ -12,13 +12,7 @@ export class Planet {
   climate: string;
 
   @Column()
-  created: string;
-
-  @Column()
   diameter: number;
-
-  @Column()
-  edited: string;
 
   @Column()
   gravity: number;
@@ -41,8 +35,15 @@ export class Planet {
   @Column()
   terrain: string;
 
-  @Column()
+  @Column({nullable:true})
   url: string;
+
+  @CreateDateColumn()
+  created: string;
+
+  @UpdateDateColumn()
+  edited: string;  
+
 
 
   @ManyToMany(()=>Species,(spacies)=>spacies.homeworld)

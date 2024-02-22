@@ -5,7 +5,9 @@ import { planetProviders } from './planet.providers';
 import { DatabaseModule } from 'src/database/database.module';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [
+    DatabaseModule
+  ],
   controllers: [PlanetsController],
   providers: [PlanetsService, ...planetProviders],
 })

@@ -20,20 +20,14 @@ export class CreateVehicleDto {
   @ApiProperty()
   readonly cost_in_credits: number;
 
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
-  readonly created: string;
+
 
   @IsNotEmpty()
   @IsNumber()
   @ApiProperty()
   readonly crew: number;
 
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
-  readonly edited: string;
+
 
   @IsNotEmpty()
   @IsNumber()
@@ -70,10 +64,7 @@ export class CreateVehicleDto {
   @ApiProperty()
   readonly vehicle_class: string;
 
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
-  readonly url: string;
+
 
   @ApiProperty({ type: () => Person, isArray: true })
   readonly pilots: Person[];

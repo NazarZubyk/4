@@ -1,4 +1,4 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Species } from 'src/resources/species/entities/species.entity';
 import { Vehicle } from 'src/resources/vehicles/entities/vehicle.entity';
 import { Starship } from 'src/resources/starships/entities/starship.entity';
@@ -11,7 +11,7 @@ export class Person {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({unique:true})
   name: string;
 
   @Column()
@@ -35,14 +35,14 @@ export class Person {
   @Column()
   gender: string;
 
-  @Column()
+  @CreateDateColumn()
   created: string;
 
-  @Column()
-  edited: string;
+  @UpdateDateColumn()
+  edited: string;  
 
 
-  @Column()
+  @Column({nullable: true})
   url: string;
 
   @ManyToOne(() => Planet, (planet) => planet.residents,{ cascade: true })

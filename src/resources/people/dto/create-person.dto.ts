@@ -49,21 +49,6 @@ export class CreatePersonDto {
   @ApiProperty()
   readonly gender: string;
 
-  @IsNotEmpty()
-  @IsDateString()
-  @ApiProperty()
-  readonly created: string;
-
-  @IsNotEmpty()
-  @IsDateString()
-  @ApiProperty()
-  readonly edited: string;
-
-  @IsNotEmpty()
-  @IsUrl()
-  @ApiProperty()
-  readonly url: string;
-
   @ApiProperty({ type: () => Planet, isArray: true })
   readonly homeworld: Planet[];
 

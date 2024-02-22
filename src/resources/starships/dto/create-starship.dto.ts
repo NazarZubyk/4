@@ -24,20 +24,14 @@ export class CreateStarshipDto {
   @ApiProperty()
   readonly cost_in_credits: number;
 
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
-  readonly created: string;
 
-  @IsNotEmpty()
-  @IsNumber()
-  @ApiProperty()
-  readonly crew: number;
 
   @IsNotEmpty()
   @IsString()
   @ApiProperty()
-  readonly edited: string;
+  readonly crew: string;
+
+
 
   @IsNotEmpty()
   @IsString()
@@ -79,10 +73,7 @@ export class CreateStarshipDto {
   @ApiProperty()
   readonly starship_class: string;
 
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
-  readonly url: string;
+
 
   @ApiProperty({ type: () => Film, isArray: true })
   readonly films: Film[];

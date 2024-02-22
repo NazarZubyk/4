@@ -27,9 +27,9 @@ export class StarshipsController {
     return this.starshipsService.findAll();
   }
 
-  @Get(':name')
-  findOne(@Param('name') name: string) {
-    return this.starshipsService.findOne(name);
+  @Get(':id')
+  findOne(@Param('id') id: number) {
+    return this.starshipsService.findOne(id);
   }
 
   @Patch(':id')

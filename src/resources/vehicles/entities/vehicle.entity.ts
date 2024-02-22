@@ -1,6 +1,6 @@
 import { Film } from 'src/resources/films/entities/film.entity';
 import { Person } from 'src/resources/people/entities/person.entity';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class Vehicle {
@@ -13,12 +13,10 @@ export class Vehicle {
   consumables: string;
   @Column()
   cost_in_credits: number;
-  @Column()
-  created: string;
+
   @Column()
   crew: number;
-  @Column()
-  edited: string;
+
   @Column()
   length: number;
   @Column()
@@ -33,7 +31,14 @@ export class Vehicle {
   passengers: number;
   @Column()
   vehicle_class: string;
-  @Column()
+
+  @CreateDateColumn()
+  created: string;
+
+  @UpdateDateColumn()
+  edited: string;  
+
+  @Column({nullable:true})
   url: string;
 
   @ManyToMany(() => Person, (person) => person.vehicles)

@@ -18,10 +18,10 @@ export class ImagesService {
   ) {}
 
   async create(file: Express.Multer.File, name: string) {
-    console.log(file);
-    const person = await this.peopleRepository.findOneBy({
+    
+    const person = await this.peopleRepository.findOne({where:{
       name: name,
-    });
+    }});
 
     if (!person) {
       unlink(file.path, () => {});
@@ -42,7 +42,7 @@ export class ImagesService {
   }
 
   findAll() {
-    return `This action returns all images`;
+    return this.imagesRepository.find();
   }
 
   findOne(id: number) {
@@ -55,7 +55,7 @@ export class ImagesService {
     });
 
     if (!imageToUpdate) {
-      return `Person with id #${id} not found`;
+      throw new NotFoundException(`Person with id #${id} not found`);
     }
 
     Object.assign(imageToUpdate, updateImageDto);

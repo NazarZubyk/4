@@ -20,20 +20,13 @@ export class CreateSpeciesDto {
   @ApiProperty()
   readonly classification: string;
 
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
-  readonly created: string;
+
 
   @IsNotEmpty()
   @IsString()
   @ApiProperty()
   readonly designation: string;
 
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
-  readonly edited: string;
 
   @IsNotEmpty()
   @IsString()
@@ -60,10 +53,7 @@ export class CreateSpeciesDto {
   @ApiProperty()
   readonly skin_colors: string;
 
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
-  readonly url: string;
+
 
   @ApiProperty({ type: () => Planet, isArray: true })
   readonly homeworld: Planet[];

@@ -1,7 +1,7 @@
 import { Film } from 'src/resources/films/entities/film.entity';
 import { Person } from 'src/resources/people/entities/person.entity';
 import { Planet } from 'src/resources/planets/entities/planet.entity';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class Species {
@@ -17,14 +17,10 @@ export class Species {
   @Column()
   classification: string;
 
-  @Column()
-  created: string;
 
   @Column()
   designation: string;
 
-  @Column()
-  edited: string;
 
   @Column()
   eye_colors: string;
@@ -41,6 +37,13 @@ export class Species {
   @Column()
   skin_colors: string;
 
+  @CreateDateColumn()
+  created: string;
+
+  @UpdateDateColumn()
+  edited: string;  
+
+  @Column({nullable:true})
   url: string;
 
   @ManyToMany(()=>Planet,(planet)=>planet.species)

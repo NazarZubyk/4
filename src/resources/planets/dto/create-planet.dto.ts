@@ -10,20 +10,14 @@ export class CreatePlanetDto {
   @ApiProperty()
   readonly climate: string;
 
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
-  readonly created: string;
+
 
   @IsNotEmpty()
   @IsNumber()
   @ApiProperty()
   readonly diameter: number;
 
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
-  readonly edited: string;
+
 
   @IsNotEmpty()
   @IsNumber()
@@ -60,10 +54,7 @@ export class CreatePlanetDto {
   @ApiProperty()
   readonly terrain: string;
 
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
-  readonly url: string;
+
 
   @ApiProperty({ type: () => Species, isArray: true })
   readonly species: Species[];

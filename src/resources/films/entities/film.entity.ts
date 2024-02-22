@@ -3,21 +3,18 @@ import { Planet } from 'src/resources/planets/entities/planet.entity';
 import { Species } from 'src/resources/species/entities/species.entity';
 import { Starship } from 'src/resources/starships/entities/starship.entity';
 import { Vehicle } from 'src/resources/vehicles/entities/vehicle.entity';
-import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class Film {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  created: string;
 
   @Column()
   director: string;
 
-  @Column()
-  edited: string;
+
 
   @Column()
   episode_id: number;
@@ -33,8 +30,15 @@ export class Film {
 
   @Column()
   title: string;
+  
+  @CreateDateColumn()
+  created: string;
 
-  @Column()
+  @UpdateDateColumn()
+  edited: string;  
+
+  
+  @Column({nullable: true})
   url: string;
 
 

@@ -1,6 +1,6 @@
 import { Film } from 'src/resources/films/entities/film.entity';
 import { Person } from 'src/resources/people/entities/person.entity';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class Starship {
@@ -15,12 +15,10 @@ export class Starship {
   consumables: string;
   @Column()
   cost_in_credits: number;
+
   @Column()
-  created: string;
-  @Column()
-  crew: number;
-  @Column()
-  edited: string;
+  crew: string;
+
   @Column()
   hyperdrive_rating: string;
   @Column()
@@ -37,7 +35,14 @@ export class Starship {
   passengers: number;
   @Column()
   starship_class: string;
-  @Column()
+
+  @CreateDateColumn()
+  created: string;
+
+  @UpdateDateColumn()
+  edited: string;  
+
+  @Column({nullable:true})
   url: string;
 
   @ManyToMany(()=>Film,(film)=>film.starships)
