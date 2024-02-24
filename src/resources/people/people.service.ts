@@ -3,7 +3,7 @@ import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
 import { Person } from './entities/person.entity';
 import { EntitiesPaginationDto } from './dto/entities-pagination.dto';
-import { In, Repository } from 'typeorm';
+import { In, PessimisticLockTransactionRequiredError, Repository } from 'typeorm';
 import { generateURLforGETsByID } from 'src/utils/generatorURLs';
 import { Planet } from '../planets/entities/planet.entity';
 import { Film } from '../films/entities/film.entity';
@@ -11,6 +11,7 @@ import { Species } from '../species/entities/species.entity';
 import { Image } from '../images/entities/image.entity';
 import { Starship } from '../starships/entities/starship.entity';
 import { Vehicle } from '../vehicles/entities/vehicle.entity';
+import { ReturnPersonDto } from './dto/return-person.dto';
 
 @Injectable()
 export class PeopleService {
@@ -104,23 +105,43 @@ export class PeopleService {
 }
 
 
-  async findAll() {sadasd
-    return await this.peopleRepository.find({
+  async findAll() {
+    const people:ReturnPersonDto[] =  await this.peopleRepository.find({
       relations: ['films', 'species', 'vehicles', 'starships', 'images', 'homeworld'],
-    });
+    })
 
+    people.forEach( (person) => {
+      person.starships =person.starships ? person.starships.map((starship) => starship.url): [];
+      person.films = person.films ? person.films.map((film) => film.url): [];
+      person.species = person.species ? person.species.map((specoes) => specoes.url): [];
+      person.vehicles = person.vehicles ? person.vehicles.map((vehicle) => vehicle.url): [];
+      person.images = person.images ? person.images.map((image) => image.url): [];
+      person.homeworld = person.homeworld ? person.homeworld.map((homeworld) => homeworld.url): [];
+    });
+      return people;
+        
   }
 
   async findOne(id: number) {
-    const personFind = await this.peopleRepository.findOne({where:{
-      id: id,
-    }});
+    const person:ReturnPersonDto = await this.peopleRepository.findOne({
+      relations: ['films', 'species', 'vehicles', 'starships', 'images', 'homeworld'],
+      where:{
+        id: id,
+      }
+  });
 
-    if(!personFind){
+    if(!person){
       throw new NotFoundException(`Person  with id - ${id} not found`);
     }
-
-    return personFind;
+    
+      person.starships =person.starships ? person.starships.map((starship) => starship.url): [];
+      person.films = person.films ? person.films.map((film) => film.url): [];
+      person.species = person.species ? person.species.map((specoes) => specoes.url): [];
+      person.vehicles = person.vehicles ? person.vehicles.map((vehicle) => vehicle.url): [];
+      person.images = person.images ? person.images.map((image) => image.url): [];
+      person.homeworld = person.homeworld ? person.homeworld.map((homeworld) => homeworld.url): [];
+    
+    return person;
   }
 
   async update(name: string, updatePersonDto: UpdatePersonDto) {

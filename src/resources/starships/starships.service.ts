@@ -1,4 +1,4 @@
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateStarshipDto } from './dto/create-starship.dto';
 import { UpdateStarshipDto } from './dto/update-starship.dto';
 import { In, Repository } from 'typeorm';
@@ -9,6 +9,7 @@ import { Film } from '../films/entities/film.entity';
 import { Species } from '../species/entities/species.entity';
 import { Vehicle } from '../vehicles/entities/vehicle.entity';
 import { generateURLforGETsByID } from 'src/utils/generatorURLs';
+import { ReturnStarshipDto } from './dto/return-starship.dto';
 
 @Injectable()
 export class StarshipsService {
@@ -69,12 +70,32 @@ export class StarshipsService {
   }
 
   async findAll() {
-    await this.starshipRepository.find()
-    return `This action returns all starships`;
+    const starships: ReturnStarshipDto[] = await this.starshipRepository.find({
+      relations: ['films', 'pilots'],
+    });
+  
+    starships.forEach((starship) => {
+      starship.films = starship.films ? starship.films.map((film) => film.url) : [];
+      starship.pilots = starship.pilots ? starship.pilots.map((pilot) => pilot.url) : [];
+    });
+  
+    return starships;
   }
 
   async findOne(id: number) {
-    return await this.starshipRepository.findOneBy({id:id});
+    const  starship: ReturnStarshipDto =  await this.starshipRepository.findOne({
+      relations: ['films', 'pilots'],
+      where:{id:id}
+    });
+
+    if(!starship){
+      throw new NotFoundException(`Starship  with id - ${id} not found`);
+    }
+
+    starship.films = starship.films ? starship.films.map((film) => film.url) : [];
+    starship.pilots = starship.pilots ? starship.pilots.map((pilot) => pilot.url) : [];
+
+    return starship;
   }
 
   async update(id: number, updateStarshipDto: UpdateStarshipDto) {

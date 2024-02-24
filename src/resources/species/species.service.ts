@@ -1,4 +1,4 @@
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSpeciesDto } from './dto/create-species.dto';
 import { UpdateSpeciesDto } from './dto/update-species.dto';
 import { privateDecrypt } from 'crypto';
@@ -10,6 +10,7 @@ import { Film } from '../films/entities/film.entity';
 import { Starship } from '../starships/entities/starship.entity';
 import { Vehicle } from '../vehicles/entities/vehicle.entity';
 import { generateURLforGETsByID } from 'src/utils/generatorURLs';
+import { ReturnSpeciesDto } from './dto/return-species.dto';
 
 @Injectable()
 export class SpeciesService {
@@ -71,11 +72,33 @@ export class SpeciesService {
     return savedSpecies;
   }
   async findAll() {
-    return await this.speciesRepository.find()
+    const species: ReturnSpeciesDto[] = await this.speciesRepository.find({
+      relations: ['homeworld', 'people', 'films'],
+    });
+  
+    species.forEach((species) => {
+      species.homeworld = species.homeworld ? species.homeworld.map((planet) => planet.url) : [];
+      species.people = species.people ? species.people.map((person) => person.url) : [];
+      species.films = species.films ? species.films.map((film) => film.url) : [];
+    });
+  
+    return species;
   }
 
   async findOne(id: number) {
-    return await this.speciesRepository.findOneBy({id:id});
+    const species:ReturnSpeciesDto = await this.speciesRepository.findOne({
+      relations: ['homeworld', 'people', 'films'],
+      where:{id:id} 
+    });
+
+    if(!species){
+      throw new NotFoundException(`Species with id - ${species.id} not found`)
+    }
+    species.homeworld = species.homeworld ? species.homeworld.map((planet) => planet.url) : [];
+    species.people = species.people ? species.people.map((person) => person.url) : [];
+    species.films = species.films ? species.films.map((film) => film.url) : [];
+
+    return species;
   }
 
   async update(id: number, updateSpeciesDto: UpdateSpeciesDto) {

@@ -10,4 +10,4 @@ AggregateError:
     at internalConnectMultiple (node:net:1114:18)
     at afterConnectMultiple (node:net:1667:5)
 }
-just check connection parameter and/or do run a db
+just check connection parameter of db and/or do run a db

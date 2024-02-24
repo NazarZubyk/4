@@ -8,6 +8,8 @@ import {
   Delete,
   UseInterceptors,
   UploadedFile,
+  ParseFilePipe,
+  FileTypeValidator,
 } from '@nestjs/common';
 import { ImagesService } from './images.service';
 import { CreateImageDto } from './dto/create-image.dto';
@@ -26,10 +28,17 @@ export class ImagesController {
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('file', { storage }))
   create(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators:[
+          new FileTypeValidator({
+            fileType: 'image/png'
+          })
+        ]
+      })
+    ) file: Express.Multer.File,
     @Body() body : CreateImageDto
   ) {
-    console.log(file)
     return this.imagesService.create(file, body.personeName);
   }
 

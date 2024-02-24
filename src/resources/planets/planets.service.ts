@@ -1,4 +1,4 @@
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePlanetDto } from './dto/create-planet.dto';
 import { UpdatePlanetDto } from './dto/update-planet.dto';
 import { In, Repository } from 'typeorm';
@@ -9,6 +9,8 @@ import { Species } from '../species/entities/species.entity';
 import { Starship } from '../starships/entities/starship.entity';
 import { Vehicle } from '../vehicles/entities/vehicle.entity';
 import { generateURLforGETsByID } from 'src/utils/generatorURLs';
+import { ReturnPlanetDto } from './dto/return-planet.dto';
+import { NotFoundError } from 'rxjs';
 
 @Injectable()
 export class PlanetsService {
@@ -73,11 +75,35 @@ export class PlanetsService {
   }
 
   async findAll() {
-    return await this.planetRepository.find();
+    const planets: ReturnPlanetDto[] = await this.planetRepository.find({
+      relations: ['species', 'films', 'residents'],
+    });
+  
+    planets.forEach((planet) => {
+      planet.species = planet.species ? planet.species.map((species) => species.url) : [];
+      planet.films = planet.films ? planet.films.map((film) => film.url) : [];
+      planet.residents = planet.residents ? planet.residents.map((resident) => resident.url) : [];
+    });
+  
+    return planets;
   }
 
   async findOne(id: number) {
-    return await this.planetRepository.findOneBy({id:id});
+    const planet : ReturnPlanetDto =  await this.planetRepository.findOne({
+      relations: ['species', 'films', 'residents'],
+      where:{id:id}
+    });
+
+    if(!planet){
+      throw new NotFoundException(`Planet with id - ${id} not found`)
+    }
+
+    planet.species = planet.species ? planet.species.map((species) => species.url) : [];
+    planet.films = planet.films ? planet.films.map((film) => film.url) : [];
+    planet.residents = planet.residents ? planet.residents.map((resident) => resident.url) : [];
+
+    return planet;
+
   }
 
   async update(id: number, updatePlanetDto: UpdatePlanetDto) {

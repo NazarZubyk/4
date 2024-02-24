@@ -6,6 +6,7 @@ import { Species } from 'src/resources/species/entities/species.entity';
 import { Starship } from 'src/resources/starships/entities/starship.entity';
 import { Vehicle } from 'src/resources/vehicles/entities/vehicle.entity';
 import { Image } from 'src/resources/images/entities/image.entity';
+import { callbackify } from 'util';
 
 
 export class CreatePersonDto {
@@ -67,3 +68,5 @@ export class CreatePersonDto {
   @ApiProperty({ type: () => Image, isArray: true })
   readonly images: Image[];
 }
+
+

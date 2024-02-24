@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateFilmDto } from './dto/create-film.dto';
 import { UpdateFilmDto } from './dto/update-film.dto';
 import { In, Repository } from 'typeorm';
@@ -9,6 +9,8 @@ import { Species } from '../species/entities/species.entity';
 import { Starship } from '../starships/entities/starship.entity';
 import { Vehicle } from '../vehicles/entities/vehicle.entity';
 import { generateURLforGETsByID } from 'src/utils/generatorURLs';
+import { ReturnFilmDto } from './dto/return-film.dto';
+import { NotFoundError } from 'rxjs';
 
 @Injectable()
 export class FilmsService {
@@ -82,11 +84,38 @@ export class FilmsService {
 }
 
   async findAll() {
-    return await this.filmRepository.find();
+    const films: ReturnFilmDto[] = await this.filmRepository.find({
+      relations: ['vehicles', 'species', 'starships', 'planets', 'characters'],
+    });
+  
+    films.forEach((film) => {
+      film.vehicles = film.vehicles ? film.vehicles.map((vehicle) => vehicle.url) : [];
+      film.species = film.species ? film.species.map((species) => species.url) : [];
+      film.starships = film.starships ? film.starships.map((starship) => starship.url) : [];
+      film.planets = film.planets ? film.planets.map((planet) => planet.url) : [];
+      film.characters = film.characters ? film.characters.map((character) => character.url) : [];
+    });
+  
+    return films;
   }
 
   async findOne(id: number) {
-    return await this.filmRepository.findOneBy({id:id});
+    const film: ReturnFilmDto =  await this.filmRepository.findOne({
+      relations: ['vehicles', 'species', 'starships', 'planets', 'characters'],
+      where:{id:id}
+    });
+    
+    if(!film){
+      throw  new NotFoundException(`Film  with id  - ${film.id} not found`)
+    }
+
+      film.vehicles = film.vehicles ? film.vehicles.map((vehicle) => vehicle.url) : [];
+      film.species = film.species ? film.species.map((species) => species.url) : [];
+      film.starships = film.starships ? film.starships.map((starship) => starship.url) : [];
+      film.planets = film.planets ? film.planets.map((planet) => planet.url) : [];
+      film.characters = film.characters ? film.characters.map((character) => character.url) : [];
+
+      return film;
   }
 
   async update(id: number, updateFilmDto: UpdateFilmDto) {

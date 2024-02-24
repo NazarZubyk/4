@@ -11,6 +11,7 @@ import { SpeciesModule } from './resources/species/species.module';
 import { PlanetsModule } from './resources/planets/planets.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ResponseInterceptor } from './interceptors/response.interceptor';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ResponseInterceptor } from './interceptors/response.interceptor';
     VehiclesModule,
     SpeciesModule,
     PlanetsModule,
+    ConfigModule.forRoot({isGlobal: true})
   ],
   controllers: [AppController],
   providers: [AppService,
