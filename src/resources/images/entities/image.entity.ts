@@ -7,8 +7,8 @@ export class Image {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  path: string;
+  // @Column()
+  // path: string;
 
 
   @CreateDateColumn()
@@ -20,7 +20,10 @@ export class Image {
 
   @Column()
   url: string;
-
+  
+  @Column()
+  keyAWS: string;
+  
   @ManyToOne(() => Person, (person) => person.images)
   person: Person;
 }

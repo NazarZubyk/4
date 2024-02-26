@@ -26,7 +26,9 @@ export class ImagesController {
 
   @Post()
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileInterceptor('file', { storage }))
+  @UseInterceptors(FileInterceptor('file'
+  //, { storage } for local save
+  ))
   create(
     @UploadedFile(
       new ParseFilePipe({

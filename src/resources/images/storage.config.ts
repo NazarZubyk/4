@@ -1,6 +1,7 @@
 import e from "express";
 import { diskStorage } from "multer";
 import { extname } from "path";
+import { generateFilename } from "src/utils/generatorUniqueFileName";
 
 export const storage = diskStorage({
     destination: "./storage",
@@ -9,10 +10,3 @@ export const storage = diskStorage({
     }
   });
   
-  async function generateFilename(file) {
-    // Extract the file extension using the extname function
-    const fileExtension = extname(file.originalname);
-    // Generate a unique filename using the current timestamp and file extension
-    const uniqueFilename = `${Date.now()}${fileExtension}`;
-    return uniqueFilename;
-}

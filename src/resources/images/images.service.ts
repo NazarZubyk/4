@@ -1,14 +1,17 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { CreateImageDto } from './dto/create-image.dto';
+import { Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { UpdateImageDto } from './dto/update-image.dto';
 import { Image } from './entities/image.entity';
 import { Repository } from 'typeorm';
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { GetObjectCommand, GetObjectCommandOutput, PutObjectCommand, PutObjectCommandOutput, S3Client } from '@aws-sdk/client-s3';
 import { unlink } from 'fs';
 import { port } from 'src/main';
 import { Person } from '../people/entities/person.entity';
 import { ReturnImageDto } from './dto/return-image.dto';
 import { ConfigService } from '@nestjs/config';
+import { generateFilename } from 'src/utils/generatorUniqueFileName';
+import { BUCKET_NAME } from 'src/utils/constant';
+import { NodeJsClient } from "@smithy/types";
+
 
 @Injectable()
 export class ImagesService {
@@ -19,7 +22,9 @@ export class ImagesService {
       secretAccessKey: this.configService.getOrThrow('AWS_SECRET_ACCESS_KEY'),
     },
 
-  })
+  })as NodeJsClient<S3Client>
+  
+  
 
   constructor(
     @Inject('IMAGE_REPOSITORY')
@@ -30,7 +35,8 @@ export class ImagesService {
   ) {}
 
   async create(file: Express.Multer.File, name: string) {
-    
+
+
     const person = await this.peopleRepository.findOne({where:{
       name: name,
     }});
@@ -40,23 +46,31 @@ export class ImagesService {
       throw new NotFoundException('Person not found');
     }
 
+    
+    const key = await generateFilename(file);
+    
     await this.s3Client.send(
       new PutObjectCommand({
-        Bucket: 'simple-storage-ku',
-        Key: file.originalname,
+        Bucket: BUCKET_NAME,
+        Key: key,
         Body: file.buffer,
       })
     )
 
-    // await this.imagesRepository.save({
-    //   path: file.path,
-    //   personID: person.id,
-    //   url: ''
-    // });
+    // const data:GetObjectCommandOutput = await this.s3Client.send(new GetObjectCommand({
+    //   Bucket:bucketName,
+    //   Key: key
+    // }))
 
-    // const image = await this.imagesRepository.findOneBy({ path: file.path });
-    // image.url = `http://localhost:${port}/images/${image.id}`;
-    // await this.imagesRepository.save(image);
+    await this.imagesRepository.save({
+      keyAWS: key,
+      person: person,
+      url: ''
+    });
+
+    const image = await this.imagesRepository.findOneBy({ keyAWS: key });
+    image.url = `http://localhost:${port}/images/${image.id}`;
+    await this.imagesRepository.save(image);
 
     return 'This action adds a new image';
   }
@@ -65,7 +79,7 @@ export class ImagesService {
     const images:ReturnImageDto[] = await this.imagesRepository.find({
       relations: ['person'],
     });
-
+    
 
     images.forEach((image) => {
       if(
@@ -81,7 +95,7 @@ export class ImagesService {
   }
 
   async findOne(id: number) {
-    const image:ReturnImageDto  = await  this.imagesRepository.findOne({
+    let image:ReturnImageDto  = await  this.imagesRepository.findOne({
       relations: ['person'],
       where:{ id: id }
     });
@@ -89,17 +103,27 @@ export class ImagesService {
     if(!image){
       throw new NotFoundException(`Image with id - ${id} not found`)
     }
-
     
     if(
       image.person instanceof Person
     ){
+      
       image.person = image.person.url ? image.person.url : '';
     }else{
       image.person = '';
     }
 
-    return image;
+    const dataFromAws = await this.s3Client.send(new GetObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: image.keyAWS,
+    }))
+   
+      const data = await dataFromAws.Body.transformToString('base64')
+       
+    delete image.keyAWS;
+   
+    return{image: image,
+            data:data };
   }
 
   async update(id: number, updateImageDto: UpdateImageDto) {
@@ -120,6 +144,7 @@ export class ImagesService {
 
   async remove(id: number) {
     const img = await this.imagesRepository.findOneBy({ id: id });
+    this.s3Client.send()
     this.imagesRepository.remove(img);
     return `This action removes a #${id} image`;
   }
