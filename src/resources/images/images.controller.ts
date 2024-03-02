@@ -55,8 +55,18 @@ export class ImagesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateImageDto: UpdateImageDto) {
-    return this.imagesService.update(+id, updateImageDto);
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    type: UpdateImageDto,
+  })
+  update(
+    @Param('id') id: string, 
+    @UploadedFile() file: Express.Multer.File,
+    @Body() updateImageDto: UpdateImageDto
+  ) {
+    
+    return this.imagesService.update(+id, updateImageDto, file);
   }
 
   @Delete(':id')

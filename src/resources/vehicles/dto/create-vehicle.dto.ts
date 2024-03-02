@@ -50,7 +50,7 @@ export class CreateVehicleDto {
   readonly model: string;
 
   @IsNotEmpty()
-  @IsString()
+  @IsString()User
   @ApiProperty()
   readonly name: string;
 

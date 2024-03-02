@@ -2,7 +2,7 @@ import { Inject, Injectable, InternalServerErrorException, NotFoundException } f
 import { UpdateImageDto } from './dto/update-image.dto';
 import { Image } from './entities/image.entity';
 import { Repository } from 'typeorm';
-import { GetObjectCommand, GetObjectCommandOutput, PutObjectCommand, PutObjectCommandOutput, S3Client } from '@aws-sdk/client-s3';
+import { DeleteObjectCommand, GetObjectCommand, GetObjectCommandOutput, PutObjectCommand, PutObjectCommandOutput, S3Client } from '@aws-sdk/client-s3';
 import { unlink } from 'fs';
 import { port } from 'src/main';
 import { Person } from '../people/entities/person.entity';
@@ -126,26 +126,70 @@ export class ImagesService {
             data:data };
   }
 
-  async update(id: number, updateImageDto: UpdateImageDto) {
-    const imageToUpdate = await this.imagesRepository.findOneBy({
-      id: id,
-    });
+  async update(id: number, updateImageDto: UpdateImageDto, file: Express.Multer.File ) {
+      //get person and image from repository
+      const person = await this.peopleRepository.findOne({where:{
+        name: updateImageDto.personeName
+      }});
 
-    if (!imageToUpdate) {
-      throw new NotFoundException(`Person with id #${id} not found`);
-    }
+      const imageToUpdate = await this.imagesRepository.findOneBy({
+        id: id,
+      });
 
-    Object.assign(imageToUpdate, updateImageDto);
+      //if image not exist we can't it change
+      if (!imageToUpdate) {
+        throw new NotFoundException(`Image with id #${id} not found`);
+      }
+      //update person if exist
+      imageToUpdate.person = person ? person : imageToUpdate.person;
+      // if haven't file it is end
+      if(!file){
+        await this.imagesRepository.save(imageToUpdate);
+        return `This action updates a #${id} image`;
+      }
+      //if file exist need delete ald file from awsS3 
+      const ansAWS = await this.s3Client.send(new DeleteObjectCommand({
+        Bucket: BUCKET_NAME,
+        Key: imageToUpdate.keyAWS,
+      }))
+      //if can't delete old file have problem
+      if(!ansAWS.DeleteMarker){
+        throw new NotFoundException(`Image with id #${id} can not found in aws`);
+      }
+      //if delete success generate key and rewrite DB
+      const key = await generateFilename(file);
+    
+      await this.s3Client.send(
+        new PutObjectCommand({
+          Bucket: BUCKET_NAME,
+          Key: key,
+          Body: file.buffer,
+        })
+      )
+      imageToUpdate.keyAWS = key;
+      await this.imagesRepository.save(imageToUpdate);
 
-    await this.imagesRepository.save(imageToUpdate);
-
-    return `This action updates a #${id} image`;
+      return `This action updates a #${id} image`;
   }
 
   async remove(id: number) {
     const img = await this.imagesRepository.findOneBy({ id: id });
-    this.s3Client.send()
-    this.imagesRepository.remove(img);
+
+    if(!img){
+      throw new NotFoundException(`Image with id #${id} not found`);
+    }
+    const ansAWS = await this.s3Client.send(new DeleteObjectCommand({
+        Bucket: BUCKET_NAME,
+        Key: img.keyAWS,
+      }))
+    
+   
+    if(!ansAWS.DeleteMarker){
+      throw new NotFoundException(`Image with id #${id} not found`);
+    }
+
+    await this.imagesRepository.remove(img);
+
     return `This action removes a #${id} image`;
   }
 }

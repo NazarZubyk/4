@@ -14,6 +14,8 @@ import { ResponseInterceptor } from './interceptors/response.interceptor';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './http-exception.filter';
+import { AuthModule } from './authentification/auth/auth.module';
+import { UsersModule } from './authentification/users/users.module';
 @Module({
   imports: [
     PeopleModule,
@@ -24,7 +26,8 @@ import { HttpExceptionFilter } from './http-exception.filter';
     VehiclesModule,
     SpeciesModule,
     PlanetsModule,
-    ConfigModule.forRoot({isGlobal: true})
+    ConfigModule.forRoot({isGlobal: true}), 
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService,
