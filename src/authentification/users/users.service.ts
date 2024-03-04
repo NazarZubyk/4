@@ -3,7 +3,7 @@ import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 // This should be a real class/interface representing a user entity
 
 
@@ -17,24 +17,13 @@ export class UsersService {
   async create(user:CreateUserDto):Promise<User>{
 
     const saltRounds = 10;
-    let password = null;
 
-    bcrypt.genSalt(saltRounds, (err, salt) => {
-      if (err) {
-        throw new InternalServerErrorException('can not add salt to password')
-      } else {
-        bcrypt.hash(user.password, salt, (err, hash) => {
-          if (err) {
-            throw new InternalServerErrorException('can not hash password')
-          } else {
-            password = hash;
-          }
-        });
-      }
-    });
+    const salt = await bcrypt.genSalt(saltRounds);
+    const hash = await bcrypt.hash(user.password, salt);
+    
 
-    if(password){
-      user.password = password;
+    if(hash){
+      user.password = hash;
       return await this.usersRepository.save(user)
     }else{
       throw new InternalServerErrorException('password was not be hashed')

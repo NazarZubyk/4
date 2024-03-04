@@ -4,6 +4,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import * as dotenv from 'dotenv';
 
+dotenv.config();
+
 export const port = 3000;
 
 async function bootstrap() {
@@ -22,5 +24,5 @@ async function bootstrap() {
   await app.listen(port);
 }
 
-console.log()
+
 bootstrap();

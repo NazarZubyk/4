@@ -2,7 +2,7 @@
 import {  ConflictException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import {  UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -17,14 +17,16 @@ export class AuthService {
   ): Promise<{ access_token: string }> {
 
     const user = await this.usersService.findOne(username);
-
+    
     return new Promise((resolve, reject) => {
       bcrypt.compare(pass, user.password, async (err, result) => {
         if (err) {
           reject(new InternalServerErrorException('An error occurred while checking the password.'));
         } else if (result) {
           const payload = { sub: user.id, username: user.username };
+          
           const access_token = await this.jwtService.signAsync(payload);
+          
           resolve({ access_token });
         } else {
           reject(new UnauthorizedException('Invalid credentials.'));
