@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { Film } from 'src/resources/films/entities/film.entity';
-import { Person } from 'src/resources/people/entities/person.entity';
-import { Species } from 'src/resources/species/entities/species.entity';
+import { Film } from '../../../resources/films/entities/film.entity';
+import { Person } from '../../../resources/people/entities/person.entity';
+import { Species } from '../../../resources/species/entities/species.entity';
 
 export class CreatePlanetDto {
   @IsNotEmpty()
@@ -10,14 +10,10 @@ export class CreatePlanetDto {
   @ApiProperty()
   readonly climate: string;
 
-
-
   @IsNotEmpty()
   @IsNumber()
   @ApiProperty()
   readonly diameter: number;
-
-
 
   @IsNotEmpty()
   @IsNumber()
@@ -54,8 +50,6 @@ export class CreatePlanetDto {
   @ApiProperty()
   readonly terrain: string;
 
-
-
   @ApiProperty({ type: () => Species, isArray: true })
   readonly species: Species[];
 
@@ -65,4 +59,3 @@ export class CreatePlanetDto {
   @ApiProperty({ type: () => Person, isArray: true })
   readonly residents: Person[];
 }
-

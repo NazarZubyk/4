@@ -1,20 +1,11 @@
 import { Module } from '@nestjs/common';
 import { PeopleController } from './people.controller';
-import { peopleProviders } from './people.providers';
 import { PeopleService } from './people.service';
-import { DatabaseModule } from 'src/database/database.module';
-import { ImagesModule } from '../images/images.module';
-import { FilmsModule } from '../films/films.module';
-import { StarshipsModule } from '../starships/starships.module';
-import { VehiclesModule } from '../vehicles/vehicles.module';
-import { SpeciesModule } from '../species/species.module';
-import { PlanetsModule } from '../planets/planets.module';
-import { imageProviders } from '../images/image.providers';
-
+import { DatabaseModule } from '../../database/database.module';
 
 @Module({
-  imports: [ DatabaseModule ],
+  imports: [DatabaseModule],
   controllers: [PeopleController],
-  providers: [ PeopleService],
+  providers: [PeopleService],
 })
 export class PeopleModule {}

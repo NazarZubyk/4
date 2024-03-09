@@ -8,13 +8,11 @@ import { Planet } from '../planets/entities/planet.entity';
 import { Species } from '../species/entities/species.entity';
 import { Starship } from '../starships/entities/starship.entity';
 import { Vehicle } from '../vehicles/entities/vehicle.entity';
-import { generateURLforGETsByID } from 'src/utils/generatorURLs';
+import { generateURLforGETsByID } from '../../utils/generatorURLs';
 import { ReturnFilmDto } from './dto/return-film.dto';
-import { NotFoundError } from 'rxjs';
 
 @Injectable()
 export class FilmsService {
-
   constructor(
     @Inject('PEOPLE_REPOSITORY')
     private peopleRepository: Repository<Person>,
@@ -28,7 +26,7 @@ export class FilmsService {
     private starshipRepository: Repository<Starship>,
     @Inject('VEHICLE_REPOSITORY')
     private vehicleRepository: Repository<Vehicle>,
-  ){}
+  ) {}
 
   async create(createFilmDto: CreateFilmDto) {
     // Create a new film entity
@@ -37,33 +35,33 @@ export class FilmsService {
 
     // Fetch related entities
     const planets = await this.planetRepository.find({
-        where: {
-            id: In(createFilmDto.planets)
-        }
+      where: {
+        id: In(createFilmDto.planets),
+      },
     });
 
     const species = await this.speciesRepository.find({
-        where: {
-            id: In(createFilmDto.species)
-        }
+      where: {
+        id: In(createFilmDto.species),
+      },
     });
 
     const vehicles = await this.vehicleRepository.find({
-        where: {
-            id: In(createFilmDto.vehicles)
-        }
+      where: {
+        id: In(createFilmDto.vehicles),
+      },
     });
 
     const starships = await this.starshipRepository.find({
-        where: {
-            id: In(createFilmDto.starships)
-        }
+      where: {
+        id: In(createFilmDto.starships),
+      },
     });
 
     const characters = await this.peopleRepository.find({
-        where: {
-            id: In(createFilmDto.characters)
-        }
+      where: {
+        id: In(createFilmDto.characters),
+      },
     });
 
     // Assign fetched related entities to the film entity
@@ -81,57 +79,75 @@ export class FilmsService {
     await this.filmRepository.save(savedFilm);
 
     return savedFilm;
-}
+  }
 
   async findAll() {
     const films: ReturnFilmDto[] = await this.filmRepository.find({
       relations: ['vehicles', 'species', 'starships', 'planets', 'characters'],
     });
-  
+
     films.forEach((film) => {
-      film.vehicles = film.vehicles ? film.vehicles.map((vehicle) => vehicle.url) : [];
-      film.species = film.species ? film.species.map((species) => species.url) : [];
-      film.starships = film.starships ? film.starships.map((starship) => starship.url) : [];
-      film.planets = film.planets ? film.planets.map((planet) => planet.url) : [];
-      film.characters = film.characters ? film.characters.map((character) => character.url) : [];
+      film.vehicles = film.vehicles
+        ? film.vehicles.map((vehicle) => vehicle.url)
+        : [];
+      film.species = film.species
+        ? film.species.map((species) => species.url)
+        : [];
+      film.starships = film.starships
+        ? film.starships.map((starship) => starship.url)
+        : [];
+      film.planets = film.planets
+        ? film.planets.map((planet) => planet.url)
+        : [];
+      film.characters = film.characters
+        ? film.characters.map((character) => character.url)
+        : [];
     });
-  
+
     return films;
   }
 
   async findOne(id: number) {
-    const film: ReturnFilmDto =  await this.filmRepository.findOne({
+    const film: ReturnFilmDto = await this.filmRepository.findOne({
       relations: ['vehicles', 'species', 'starships', 'planets', 'characters'],
-      where:{id:id}
+      where: { id: id },
     });
-    
-    if(!film){
-      throw  new NotFoundException(`Film  with id  - ${film.id} not found`)
+
+    if (!film) {
+      throw new NotFoundException(`Film  with id  - ${film.id} not found`);
     }
 
-      film.vehicles = film.vehicles ? film.vehicles.map((vehicle) => vehicle.url) : [];
-      film.species = film.species ? film.species.map((species) => species.url) : [];
-      film.starships = film.starships ? film.starships.map((starship) => starship.url) : [];
-      film.planets = film.planets ? film.planets.map((planet) => planet.url) : [];
-      film.characters = film.characters ? film.characters.map((character) => character.url) : [];
+    film.vehicles = film.vehicles
+      ? film.vehicles.map((vehicle) => vehicle.url)
+      : [];
+    film.species = film.species
+      ? film.species.map((species) => species.url)
+      : [];
+    film.starships = film.starships
+      ? film.starships.map((starship) => starship.url)
+      : [];
+    film.planets = film.planets ? film.planets.map((planet) => planet.url) : [];
+    film.characters = film.characters
+      ? film.characters.map((character) => character.url)
+      : [];
 
-      return film;
+    return film;
   }
 
   async update(id: number, updateFilmDto: UpdateFilmDto) {
-    const film = await this.filmRepository.findOneBy({id:id})
-    if(!film){
-      throw new Error(`can't find film with id - ${id}`)
+    const film = await this.filmRepository.findOneBy({ id: id });
+    if (!film) {
+      throw new Error(`can't find film with id - ${id}`);
     }
 
-    await Object.assign(film,updateFilmDto);
-    await this.filmRepository.save(film)
+    await Object.assign(film, updateFilmDto);
+    await this.filmRepository.save(film);
 
     return `This action updates a #${id} film`;
   }
 
   async remove(id: number) {
-    const film = await this.filmRepository.findOneBy({id:id}) 
+    const film = await this.filmRepository.findOneBy({ id: id });
     await this.filmRepository.remove(film);
     return `This action removes a #${id} film`;
   }

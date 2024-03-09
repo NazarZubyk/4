@@ -1,13 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsNumber, IsArray, IsUrl, IsDateString } from 'class-validator';
-import { Film } from 'src/resources/films/entities/film.entity';
-import { Planet } from 'src/resources/planets/entities/planet.entity';
-import { Species } from 'src/resources/species/entities/species.entity';
-import { Starship } from 'src/resources/starships/entities/starship.entity';
-import { Vehicle } from 'src/resources/vehicles/entities/vehicle.entity';
-import { Image } from 'src/resources/images/entities/image.entity';
-import { callbackify } from 'util';
-
+import { IsNotEmpty, IsString, IsNumber } from 'class-validator';
+import { Film } from '../../../resources/films/entities/film.entity';
+import { Planet } from '../../../resources/planets/entities/planet.entity';
+import { Species } from '../../../resources/species/entities/species.entity';
+import { Starship } from '../../../resources/starships/entities/starship.entity';
+import { Vehicle } from '../../../resources/vehicles/entities/vehicle.entity';
+import { Image } from '../../../resources/images/entities/image.entity';
 
 export class CreatePersonDto {
   @IsNotEmpty()
@@ -68,5 +66,3 @@ export class CreatePersonDto {
   @ApiProperty({ type: () => Image, isArray: true })
   readonly images: Image[];
 }
-
-

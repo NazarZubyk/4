@@ -12,6 +12,8 @@ import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
 import { PeopleService } from './people.service';
 import { ApiTags } from '@nestjs/swagger';
+import { Roles } from '../../authentification/auth/decorators/roles.decorator';
+import { Role } from '../../authentification/auth/enums/role.enum';
 
 @ApiTags('People')
 @Controller('people')
@@ -19,22 +21,26 @@ export class PeopleController {
   constructor(private readonly peopleService: PeopleService) {}
 
   @Post()
+  @Roles(Role.Admin)
   create(@Body() createPersonDto: CreatePersonDto) {
     console.log('created');
     return this.peopleService.create(createPersonDto);
   }
 
   @Get()
+  @Roles(Role.User)
   findAll() {
     return this.peopleService.findAll();
   }
 
   @Get(':id')
+  @Roles(Role.User)
   findOne(@Param('id') id: number) {
     return this.peopleService.findOne(id);
   }
 
   @Get(':page/:size')
+  @Roles(Role.User)
   entitiesWithPagination(
     @Param('page') page?: number,
     @Param('size') size?: number,
@@ -43,6 +49,7 @@ export class PeopleController {
   }
 
   @Patch(':name')
+  @Roles(Role.Admin)
   update(
     @Param('name') name: string,
     @Body() updatePersonDto: UpdatePersonDto,
@@ -51,7 +58,8 @@ export class PeopleController {
   }
 
   @Delete(':name')
-  remove(@Param('name') name: string) {
+  @Roles(Role.Admin)
+  remove(@Query('name') name: string) {
     return this.peopleService.remove(name);
   }
 }

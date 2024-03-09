@@ -1,7 +1,15 @@
-import { Film } from 'src/resources/films/entities/film.entity';
-import { Person } from 'src/resources/people/entities/person.entity';
-import { Planet } from 'src/resources/planets/entities/planet.entity';
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Film } from '../../../resources/films/entities/film.entity';
+import { Person } from '../../../resources/people/entities/person.entity';
+import { Planet } from '../../../resources/planets/entities/planet.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Species {
@@ -17,10 +25,8 @@ export class Species {
   @Column()
   classification: string;
 
-
   @Column()
   designation: string;
-
 
   @Column()
   eye_colors: string;
@@ -41,21 +47,20 @@ export class Species {
   created: string;
 
   @UpdateDateColumn()
-  edited: string;  
+  edited: string;
 
-  @Column({nullable:true})
+  @Column({ nullable: true })
   url: string;
 
-  @ManyToMany(()=>Planet,(planet)=>planet.species)
-  @JoinTable({name: 'planet_species'})
+  @ManyToMany(() => Planet, (planet) => planet.species)
+  @JoinTable({ name: 'planet_species' })
   homeworld: Planet[];
 
-
   @ManyToMany(() => Person, (person) => person.species)
-  @JoinTable({name: 'person_species'})
+  @JoinTable({ name: 'person_species' })
   people: Person[];
 
-  @ManyToMany(()=>Film,(film)=>film.species)
-  @JoinTable({name: 'film_species'})
+  @ManyToMany(() => Film, (film) => film.species)
+  @JoinTable({ name: 'film_species' })
   films: Film[];
 }

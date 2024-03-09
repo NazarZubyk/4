@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { Film } from 'src/resources/films/entities/film.entity';
-import { Person } from 'src/resources/people/entities/person.entity';
+import { Film } from '../../../resources/films/entities/film.entity';
+import { Person } from '../../../resources/people/entities/person.entity';
 
 export class CreateStarshipDto {
   @IsNotEmpty()
@@ -24,14 +24,10 @@ export class CreateStarshipDto {
   @ApiProperty()
   readonly cost_in_credits: number;
 
-
-
   @IsNotEmpty()
   @IsString()
   @ApiProperty()
   readonly crew: string;
-
-
 
   @IsNotEmpty()
   @IsString()
@@ -72,8 +68,6 @@ export class CreateStarshipDto {
   @IsString()
   @ApiProperty()
   readonly starship_class: string;
-
-
 
   @ApiProperty({ type: () => Film, isArray: true })
   readonly films: Film[];

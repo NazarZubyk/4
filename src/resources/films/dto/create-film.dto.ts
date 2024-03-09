@@ -1,21 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsNotEmpty, IsNumber, IsString, IsUrl } from 'class-validator';
-import { Planet } from 'src/resources/planets/entities/planet.entity';
-import { Species } from 'src/resources/species/entities/species.entity';
-import { Vehicle } from 'src/resources/vehicles/entities/vehicle.entity';
-import { Starship } from 'src/resources/starships/entities/starship.entity';
-import { Image } from 'src/resources/images/entities/image.entity';
-import { Film } from '../entities/film.entity';
-import { Person } from 'src/resources/people/entities/person.entity';
+import { IsDateString, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { Planet } from '../../../resources/planets/entities/planet.entity';
+import { Species } from '../../../resources/species/entities/species.entity';
+import { Vehicle } from '../../../resources/vehicles/entities/vehicle.entity';
+import { Starship } from '../../../resources/starships/entities/starship.entity';
+import { Person } from '../../../resources/people/entities/person.entity';
 
 export class CreateFilmDto {
-
   @IsNotEmpty()
   @IsString()
   @ApiProperty()
   readonly director: string;
-
-
 
   @IsNotEmpty()
   @IsNumber()
@@ -42,10 +37,8 @@ export class CreateFilmDto {
   @ApiProperty()
   readonly title: string;
 
-
-
   @ApiProperty({ type: () => Person, isArray: true })
-  readonly characters: Person[]
+  readonly characters: Person[];
 
   @ApiProperty({ type: () => Planet, isArray: true })
   readonly planets: Planet[];
@@ -58,7 +51,4 @@ export class CreateFilmDto {
 
   @ApiProperty({ type: () => Starship, isArray: true })
   readonly starships: Starship[];
-
-
 }
-

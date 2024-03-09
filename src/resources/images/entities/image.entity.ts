@@ -1,6 +1,12 @@
-
-import { Person } from 'src/resources/people/entities/person.entity';
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Person } from '../../../resources/people/entities/person.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Image {
@@ -10,20 +16,18 @@ export class Image {
   // @Column()
   // path: string;
 
-
   @CreateDateColumn()
   created: string;
 
   @UpdateDateColumn()
-  edited: string;  
-
+  edited: string;
 
   @Column()
   url: string;
-  
+
   @Column()
   keyAWS: string;
-  
+
   @ManyToOne(() => Person, (person) => person.images)
   person: Person;
 }

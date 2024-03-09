@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { Film } from 'src/resources/films/entities/film.entity';
-import { Person } from 'src/resources/people/entities/person.entity';
-import { Planet } from 'src/resources/planets/entities/planet.entity';
+import { Film } from '../../../resources/films/entities/film.entity';
+import { Person } from '../../../resources/people/entities/person.entity';
+import { Planet } from '../../../resources/planets/entities/planet.entity';
 
 export class CreateSpeciesDto {
   @IsNotEmpty()
@@ -20,13 +20,10 @@ export class CreateSpeciesDto {
   @ApiProperty()
   readonly classification: string;
 
-
-
   @IsNotEmpty()
   @IsString()
   @ApiProperty()
   readonly designation: string;
-
 
   @IsNotEmpty()
   @IsString()
@@ -52,8 +49,6 @@ export class CreateSpeciesDto {
   @IsString()
   @ApiProperty()
   readonly skin_colors: string;
-
-
 
   @ApiProperty({ type: () => Planet, isArray: true })
   readonly homeworld: Planet[];

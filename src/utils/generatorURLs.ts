@@ -1,6 +1,6 @@
-import { port } from "src/main";
+import { port } from "./constant";
 
 
-export async function generateURLforGETsByID(resource:string, id:number) {
-    return `http://localhost:${port}/${resource}/${id}`;
+export async function generateURLforGETsByID(resource: string, id: number) {
+  return `http://localhost:${port}/${resource}/${id}`;
 }

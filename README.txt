@@ -13,7 +13,7 @@ AggregateError:
 just check connection parameter of db and/or do run a db
 //////////////////////////////////////////////////////////////////////////////////////////
 in root folder, in my example it is '4', need to create .env file, without name
-file must contain information from your awsS3 bucket
+file must contain information from your awsS3 bucket and JWT const for security
 
 AWS_ACCESS_KEY_ID=your id key 
 AWS_SECRET_ACCESS_KEY=your secret key 

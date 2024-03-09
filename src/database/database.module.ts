@@ -9,7 +9,7 @@ import { starshipProviders } from 'src/resources/starships/starship.providers';
 import { vehicleProviders } from 'src/resources/vehicles/vehicle.providers';
 
 @Module({
-  imports: [], 
+  imports: [],
   providers: [
     ...databaseProviders,
     ...peopleProviders,
@@ -18,7 +18,7 @@ import { vehicleProviders } from 'src/resources/vehicles/vehicle.providers';
     ...planetProviders,
     ...speciesProviders,
     ...starshipProviders,
-    ...vehicleProviders
+    ...vehicleProviders,
   ],
   exports: [
     ...databaseProviders,
@@ -28,7 +28,7 @@ import { vehicleProviders } from 'src/resources/vehicles/vehicle.providers';
     ...planetProviders,
     ...speciesProviders,
     ...starshipProviders,
-    ...vehicleProviders
+    ...vehicleProviders,
   ],
 })
 export class DatabaseModule {}

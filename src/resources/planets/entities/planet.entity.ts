@@ -1,7 +1,16 @@
-import { Film } from 'src/resources/films/entities/film.entity';
-import { Person } from 'src/resources/people/entities/person.entity';
-import { Species } from 'src/resources/species/entities/species.entity';
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Film } from '../../../resources/films/entities/film.entity';
+import { Person } from '../../../resources/people/entities/person.entity';
+import { Species } from '../../../resources/species/entities/species.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Planet {
@@ -35,25 +44,23 @@ export class Planet {
   @Column()
   terrain: string;
 
-  @Column({nullable:true})
+  @Column({ nullable: true })
   url: string;
 
   @CreateDateColumn()
   created: string;
 
   @UpdateDateColumn()
-  edited: string;  
+  edited: string;
 
-
-
-  @ManyToMany(()=>Species,(spacies)=>spacies.homeworld)
-  @JoinTable({name: 'planet_species'})
+  @ManyToMany(() => Species, (spacies) => spacies.homeworld)
+  @JoinTable({ name: 'planet_species' })
   species: Species[];
 
-  @ManyToMany(()=>Film,(film)=>film.planets)
-  @JoinTable({name: 'film_planets'})
+  @ManyToMany(() => Film, (film) => film.planets)
+  @JoinTable({ name: 'film_planets' })
   films: Film[];
 
-  @OneToMany(()=>Person,(person)=>person.homeworld)
+  @OneToMany(() => Person, (person) => person.homeworld)
   residents: Person[];
 }

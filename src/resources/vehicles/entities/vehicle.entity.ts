@@ -1,6 +1,14 @@
-import { Film } from 'src/resources/films/entities/film.entity';
-import { Person } from 'src/resources/people/entities/person.entity';
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Film } from '../../../resources/films/entities/film.entity';
+import { Person } from '../../../resources/people/entities/person.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Vehicle {
@@ -36,16 +44,16 @@ export class Vehicle {
   created: string;
 
   @UpdateDateColumn()
-  edited: string;  
+  edited: string;
 
-  @Column({nullable:true})
+  @Column({ nullable: true })
   url: string;
 
   @ManyToMany(() => Person, (person) => person.vehicles)
   @JoinTable({ name: 'person_vehicle' })
   pilots: Person[];
-  
-  @ManyToMany(() => Film,(film)=>film.vehicles)
+
+  @ManyToMany(() => Film, (film) => film.vehicles)
   @JoinTable({ name: 'vehicle_film' })
   films: Film[];
 }
