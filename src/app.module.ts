@@ -13,7 +13,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ResponseInterceptor } from './interceptors/response.interceptor';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
-import { HttpExceptionFilter } from './http-exception.filter';
+import { HttpExceptionFilter } from './utils/http-exception.filter';
 import { AuthModule } from './authentification/auth/auth.module';
 @Module({
   imports: [
