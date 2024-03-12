@@ -22,7 +22,8 @@ export class FilmsController {
   @Post()
   @Roles(Role.Admin)
   create(@Body() createFilmDto: CreateFilmDto) {
-    return this.filmsService.create(createFilmDto);
+    return  this.filmsService.create(createFilmDto);
+    
   }
 
   @Get()

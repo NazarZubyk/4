@@ -7,6 +7,8 @@ import { APP_GUARD } from '@nestjs/core';
 import { UsersModule } from '../users/users.module';
 import * as dotenv from 'dotenv';
 import { CombinedGuard } from './guards/combined.guard';
+import { AuthGuard } from './guards/auth.guard';
+import { RolesGuard } from './guards/roles.guard';
 
 dotenv.config();
 
@@ -20,6 +22,8 @@ dotenv.config();
     }),
   ],
   providers: [
+    AuthGuard,
+    RolesGuard,
     AuthService,
     {
       provide: APP_GUARD,
